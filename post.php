@@ -15,15 +15,18 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     $query->execute();
     if ($query->rowCount() == 1) {
         $targetDir = "uploads/images/posts";
-        $data = json_decode($_POST['info']);
+        if (isset($_POST['info'])) {
+            $data = json_decode($_POST['info']);
+            echo json_encode($data);
 
-        if ($_FILES) {
-            $target_dir = $targetDir . '/' . rand() . '_' . time() . '.jpeg';
-
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
-                echo json_encode(array("success", $data));
-            } else {
-                echo json_encode(array("failed"));
+            if ($_FILES) {
+                $target_dir = $targetDir . '/' . rand() . '_' . time() . '.jpeg';
+    
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
+                    echo json_encode(array("success", $data));
+                } else {
+                    echo json_encode(array("failed"));
+                }
             }
         }
     }
