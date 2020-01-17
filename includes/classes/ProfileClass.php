@@ -21,6 +21,7 @@ class ProfileDataHandler {
         $query->execute();
 
         $data = $query->fetch(PDO::FETCH_ASSOC);
+        $data['profilepic'] = 'http://172.17.254.209/api/'.$data['profilepic'];
         return json_encode($data);
     }
 }

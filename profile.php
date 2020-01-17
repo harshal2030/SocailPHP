@@ -22,9 +22,10 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
         $email = $data['email'];
 
         if ($controller->validateEmail($email)) {
-            echo $controller->fetchProfileData($em);
+            echo $controller->fetchProfileData($email);
         }
-    }
+        else echo json_encode($email);
+    } else echo json_encode("invalid credentials");
 }
 else {
     header("WWW-Authenticate: Basic realm='Restricted Section'");
