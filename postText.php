@@ -1,6 +1,7 @@
 <?php
 require_once("includes/config.php");
 require_once("includes/classes/FormSanitizer.php");
+require_once("includes/classes/PostClass.php");
 
 if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
@@ -14,29 +15,26 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
     $query->execute();
     if ($query->rowCount() == 1) {
-        $targetDir = "uploads/images/posts";
-        if (isset($_POST['info'])) {
-            $data = json_decode($_POST['info']);
-            echo json_encode($data);
+        $json = file_get_contents('php://input');
 
-            if ($_FILES) {
-                $target_dir = $targetDir . '/' . rand() . '_' . time() . '.jpeg';
-    
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
-                    echo json_encode(array("success", $data));
-                } else {
-                    echo json_encode(array("failed"));
-                }
-            }
-        }
+        $controller = new PostHandler($con);
+        $data = json_decode($json, true);
+
+        $by = $data['by'];
+        $for = $data['for'];
+        $title = $data['title'];
+        $desc = $data['desc'];
+
+        $wasSuccess = $controller->insertPostData($by, $for, $title, $desc);
+
+        if ($wasSuccess) {
+            echo json_encode(array(true));
+        } else echo json_encode(array(false));
     }
-    else echo json_encode(array("Invalid Credentials"));
 }
 else {
     header("WWW-Authenticate: Basic realm='Restricted Section'");
     header("HTTP/1.0 401 Unauthorized");
     die("Please enter your username and password");
 }
-
-
 ?>

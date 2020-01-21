@@ -24,16 +24,6 @@ class ProfileDataHandler {
         $data['profilepic'] = 'http://172.17.30.161/api/'.$data['profilepic'];
         return json_encode($data);
     }
-
-    public function insertPostData($by, $to, $title, $desc) {
-        $query = $this->con->prepare("INSERT INTO postTexts(by, to, title, desc) VALUES(:by, :to, :title, :desc)");
-        $query->bindParam(':by', $by);
-        $query->bindParam(':to', $title);
-        $query->bindParam(':title', $title);
-        $query->bindParam(':desc', $desc);
-        
-        return $query->execute();
-    }
 }
 
 ?>

@@ -4,7 +4,6 @@ class FormSanitizer {
         $var = strip_tags($var);
         $var = htmlentities($var);
         $var = stripslashes($var);
-        $var = str_replace("/", "", $var);
         return $var;
     }
     public static function sanitizeTitle($var) {
