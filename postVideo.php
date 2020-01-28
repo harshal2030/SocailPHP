@@ -20,14 +20,14 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $data = json_decode($_POST['info'], true);
             $by = $data['by'];
             $for = $data['for'];
+            
+            if ($_FILES['video']) {
+                $target_dir2 = $targetDirImg . '/' . rand() . '_' . time() . '.mp4';
 
-            if ($_FILES['image']) {
-                $target_dir = $targetDirImg . '/' . rand() . '_' . time() . '.jpeg';
-    
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
+                if (move_uploaded_file($_FILES['video']['tmp_name'], $target_dir2)) {
                     $controller = new PostHandler($con);
 
-                    $wasSuccess = $controller->insertPostMedia($by, $for, $target_dir);
+                    $wasSuccess = $controller->insertPostMedia($by, $for, $target_dir2);
                     if ($wasSuccess) {
                         echo json_encode(array(true));
                     } else echo json_encode(array(false));
@@ -35,15 +35,13 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
                     echo json_encode(array(false));
                 }
             }
-        }
     }
-    else echo json_encode(array("Invalid Credentials"));
+    else echo json_encode(array("Invalid Credentials!"));
+}
 }
 else {
     header("WWW-Authenticate: Basic realm='Restricted Section'");
     header("HTTP/1.0 401 Unauthorized");
     die("Please enter your username and password");
 }
-
-
 ?>
