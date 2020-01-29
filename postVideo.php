@@ -7,7 +7,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
     $username = FormSanitizer::sanitizeString($_SERVER['PHP_AUTH_USER']);
     $pw = FormSanitizer::sanitizePassword($_SERVER['PHP_AUTH_PW']);
-    $pw = hash("sha512", $salt1.$pw.$salt2);
+    $pw = hash("sha512", $salt1 . $pw . $salt2);
 
     $query = $con->prepare("SELECT * FROM authenticate WHERE username=:un && password=:pw");
     $query->bindParam(":un", $username);
@@ -20,7 +20,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $data = json_decode($_POST['info'], true);
             $by = $data['by'];
             $for = $data['for'];
-            
+
             if ($_FILES['video']) {
                 $target_dir2 = $targetDirImg . '/' . rand() . '_' . time() . '.mp4';
 
@@ -35,13 +35,10 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
                     echo json_encode(array(false));
                 }
             }
-    }
-    else echo json_encode(array("Invalid Credentials!"));
-}
-}
-else {
+        }
+    } else echo json_encode(array("Invalid Credentials!"));
+} else {
     header("WWW-Authenticate: Basic realm='Restricted Section'");
     header("HTTP/1.0 401 Unauthorized");
     die("Please enter your username and password");
 }
-?>

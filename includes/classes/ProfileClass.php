@@ -25,5 +25,3 @@ class ProfileDataHandler {
         return json_encode($data);
     }
 }
-
-?>
