@@ -1,14 +1,12 @@
 <?php
-require_once('includes/paths.php');
+require_once("includes/config.php");
 
-function create_dir($dir) {
-    if (!is_dir($dir)) {
-        mkdir($dir, 0777, true);
-        echo "successfully created target dir";
-    } else echo "unable to create target dir";
-}
+$user='harshal';
+$pw=hash('sha512', $salt1.'HAKj ss@9575-8959-221133'.$salt2);
 
-create_dir(LocalPath::$postImagePath);
-create_dir(LocalPath::$postVideoPath);
-create_dir(LocalPath::$profilepicPath);
+$q = $con->prepare("INSERT INTO authenticate(username, password) VALUES(:un, :pw)");
+$q->bindParam(':un', $user);
+$q->bindParam(':pw', $pw);
+
+$q->execute();
 ?>
