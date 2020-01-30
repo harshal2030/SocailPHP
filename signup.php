@@ -3,6 +3,7 @@ require_once("includes/config.php");
 require_once("includes/classes/Constants.php");
 require_once("includes/classes/Account.php");
 require_once("includes/classes/FormSanitizer.php");
+require_once("includes/paths.php");
 
 if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
@@ -25,7 +26,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
         $phone = FormSanitizer::sanitizeString($obj['phone']);
         $pw = FormSanitizer::sanitizePassword($obj['password']);
         $dob = $obj['dob'];
-        $profilePic = "uploads/images/profilePics/default.png";
+        $profilePic = LocalPath::$profilepicPath . "default.png";
     
         $account = new Account($con);
     

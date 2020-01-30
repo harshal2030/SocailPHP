@@ -2,6 +2,7 @@
 require_once("includes/config.php");
 require_once("includes/classes/FormSanitizer.php");
 require_once("includes/classes/PostClass.php");
+require_once("includes/paths.php");
 
 if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
@@ -15,19 +16,19 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
     $query->execute();
     if ($query->rowCount() == 1) {
-        $targetDirImg = "uploads/images/posts";
+        $targetDirVid = LocalPath::$postVideoPath;
         if (isset($_POST['info'])) {
             $data = json_decode($_POST['info'], true);
             $by = $data['by'];
             $for = $data['for'];
 
             if ($_FILES['video']) {
-                $target_dir2 = $targetDirImg . '/' . rand() . '_' . time() . '.mp4';
+                $target_dir = $targetDirVid . rand() . '_' . time() . '.mp4';
 
-                if (move_uploaded_file($_FILES['video']['tmp_name'], $target_dir2)) {
+                if (move_uploaded_file($_FILES['video']['tmp_name'], $target_dir)) {
                     $controller = new PostHandler($con);
 
-                    $wasSuccess = $controller->insertPostMedia($by, $for, $target_dir2);
+                    $wasSuccess = $controller->insertPostMedia($by, $for, $target_dir);
                     if ($wasSuccess) {
                         echo json_encode(array(true));
                     } else echo json_encode(array(false));

@@ -2,6 +2,7 @@
 require_once("includes/config.php");
 require_once("includes/classes/FormSanitizer.php");
 require_once("includes/classes/PostClass.php");
+require_once("includes/paths.php");
 
 if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
@@ -15,14 +16,14 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
     $query->execute();
     if ($query->rowCount() == 1) {
-        $targetDirImg = "uploads/images/posts";
+        $targetDirImg = LocalPath::$postImagePath;
         if (isset($_POST['info'])) {
             $data = json_decode($_POST['info'], true);
             $by = $data['by'];
             $for = $data['for'];
 
             if ($_FILES['image']) {
-                $target_dir = $targetDirImg . '/' . rand() . '_' . time() . '.jpeg';
+                $target_dir = $targetDirImg . rand() . '_' . time() . '.jpeg';
     
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
                     $controller = new PostHandler($con);
