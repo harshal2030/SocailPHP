@@ -17,24 +17,53 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     $query->execute();
     if ($query->rowCount() == 1) {
         $targetDirImg = LocalPath::$postImagePath;
+        $targetDirVideo = LocalPath::$postVideoPath;
         if (isset($_POST['info'])) {
+            //storing data in variables
+            $mediaIncluded = 0; //check if media is included with request, false by default
             $data = json_decode($_POST['info'], true);
+            $id = $data['id'];
             $by = $data['by'];
             $for = $data['for'];
+            $title = $data['title'];
+            $desc = $data['desc'];
 
-            if ($_FILES['image']) {
+            $controller = new PostHandler($con);
+
+            if (isset($_FILES['image'])) {
+                $mediaIncluded = 1;
                 $target_dir = $targetDirImg . rand() . '_' . time() . '.jpeg';
     
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
-                    $controller = new PostHandler($con);
 
-                    $wasSuccess = $controller->insertPostMedia($by, $for, $target_dir);
+                    $wasSuccess = $controller->insertPostMedia($id, $by, $for, $target_dir) && 
+                                $controller->insertPostData($id, $by, $for, $title, $desc, $mediaIncluded);
                     if ($wasSuccess) {
                         echo json_encode(array(true));
                     } else echo json_encode(array(false));
                 } else {
                     echo json_encode(array(false));
                 }
+            } elseif(isset($_FILES['video'])) {
+                $mediaIncluded = 1;
+                $target_dir = $targetDirImg . rand() . '_' . time() . '.mp4';
+    
+                if (move_uploaded_file($_FILES['video']['tmp_name'], $target_dir)) {
+
+                    $wasSuccess = $controller->insertPostMedia($id, $by, $for, $target_dir) && 
+                                $controller->insertPostData($id, $by, $for, $title, $desc, $mediaIncluded);
+                    if ($wasSuccess) {
+                        echo json_encode(array(true));
+                    } else echo json_encode(array(false));
+                } else {
+                    echo json_encode(array(false));
+                }
+            } else {
+                $wasSuccess = $controller->insertPostData($id, $by, $for, $title, $desc, 0);
+
+                if ($wasSuccess) {
+                    echo json_encode(array(true));
+                } else echo json_encode(array(false));
             }
         }
     }
@@ -45,6 +74,3 @@ else {
     header("HTTP/1.0 401 Unauthorized");
     die("Please enter your username and password");
 }
-
-
-?>
