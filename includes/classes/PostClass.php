@@ -30,6 +30,10 @@ class PostHandler {
 
         return $query->execute();
     }
+
+    public function fetchPostData($by) {
+        
+    }
 }
 
 ?>
