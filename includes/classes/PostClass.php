@@ -22,7 +22,15 @@ class PostHandler {
     }
 
     public function fetchPostData($by) {
-        
+        $query = $this->con->prepare("SELECT * FROM posttexts WHERE postedBy=:by");
+        $query->bindParam(':by', $by);
+        $query->execute();
+
+        $dataArray = array();
+        while($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            array_push($dataArray, $row);
+        }
+        return json_encode($dataArray);
     }
 }
 
