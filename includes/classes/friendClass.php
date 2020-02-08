@@ -20,7 +20,17 @@ class FriendHandler {
     }
 
     public function fetchFollowing($userEmail) {
-        $query = $this->con->prepare("SELECT following")
+        $query = $this->con->prepare("SELECT following from friends WHERE userEmail=:uemail");
+        $query->bindParam(":uemail", $userEmail);
+        $query->execute();
+
+        $following = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            array_push($following, $row['following']);
+        }
+
+        return json_encode($following);
     }
 
 
