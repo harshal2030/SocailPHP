@@ -36,6 +36,18 @@ class PostHandler {
         }
         return json_encode($dataArray);
     }
+
+    public function fetchPostDataById($id) {
+        $query = $this->con->prepare("SELECT * FROM posttexts WHERE id=:id");
+        $query->bindParam(':id', $id);
+        $query->execute();
+
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+        if (strlen($data['mediaPath']) != 0) {
+            $data['mediaPath'] = 'http://192.168.43.25/api/'.$data['mediaPath'];
+        }
+        return json_encode($data);
+    }
 }
 
 ?>
