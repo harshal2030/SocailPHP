@@ -26,6 +26,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             // end default values
             $data = json_decode($_POST['info'], true);
             $id = $data['id'];
+            $name = $data['name'];
             $by = $data['by'];
             $for = $data['for'];
             $title = $data['title'];
@@ -39,7 +40,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $target_dir)) {
 
-                    $wasSuccess = $controller->insertPostData($id, $by, $for, $title, $desc, $mediaIncluded, $target_dir);
+                    $wasSuccess = $controller->insertPostData($id, $by, $name, $for, $title, $desc, $mediaIncluded, $target_dir);
                     if ($wasSuccess) {
                         echo json_encode(array(true));
                     } else echo json_encode(array(false));
@@ -52,7 +53,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     
                 if (move_uploaded_file($_FILES['video']['tmp_name'], $target_dir)) {
 
-                    $wasSuccess = $controller->insertPostData($id, $by, $for, $title, $desc, $mediaIncluded, $target_dir);
+                    $wasSuccess = $controller->insertPostData($id, $by, $name, $for, $title, $desc, $mediaIncluded, $target_dir);
                     if ($wasSuccess) {
                         echo json_encode(array(true));
                     } else echo json_encode(array(false));
@@ -60,7 +61,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
                     echo json_encode(array(false));
                 }
             } else {
-                $wasSuccess = $controller->insertPostData($id, $by, $for, $title, $desc, $mediaIncluded, $target_dir);
+                $wasSuccess = $controller->insertPostData($id, $by, $name, $for, $title, $desc, $mediaIncluded, $target_dir);
 
                 if ($wasSuccess) {
                     echo json_encode(array(true));
