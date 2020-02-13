@@ -23,7 +23,7 @@ class PostHandler {
     }
 
     public function fetchPostData($by) {
-        $query = $this->con->prepare("SELECT * FROM posttexts WHERE postedBy=:by");
+        $query = $this->con->prepare("SELECT * FROM posttexts WHERE postedBy=:by ORDER BY timePosted DESC");
         $query->bindParam(':by', $by);
         $query->execute();
 
