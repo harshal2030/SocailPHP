@@ -19,12 +19,10 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
         $controller = new ProfileDataHandler($con);
         $data = json_decode($json, true);
-        $email = $data['email'];
+        $un = $data['username'];
 
-        if ($controller->validateEmail($email)) {
-            echo $controller->fetchProfileData($email);
-        }
-        else echo json_encode($email);
+        echo $controller->fetchProfileData($un);
+        
     } else echo json_encode("invalid credentials");
 }
 else {
@@ -32,4 +30,3 @@ else {
     header("HTTP/1.0 401 Unauthorized");
     die("Please enter your username and password");
 }
-?>

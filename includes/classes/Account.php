@@ -10,15 +10,16 @@ class Account {
         $this->con = $con;
     }
 
-    public function register($n, $adm, $em, $phoneNum, $pw, $dob, $profilePic) {
+    public function register($n, $un, $adm, $em, $phoneNum, $pw, $dob, $profilePic) {
         $this->validateName($n);
+        $this->validateUsername($un);
         $this->validateAdm($adm);
         $this->validateEmail($em);
         $this->validatephone($phoneNum);
         $this->validatePassword($pw);
 
         if (empty($this->errorArray)) {
-            $this->insertUserDetails($n, $adm, $em, $phoneNum, $pw, $dob, $profilePic);
+            $this->insertUserDetails($n, $un, $adm, $em, $phoneNum, $pw, $dob, $profilePic);
             return true;
         }
         else return false;
@@ -100,13 +101,13 @@ class Account {
         } 
     }
 
-    public function insertUserDetails($n, $adm, $em, $phoneNum, $pw, $dob, $profilePic) {
+    public function insertUserDetails($n, $un, $adm, $em, $phoneNum, $pw, $dob, $profilePic) {
         $pw=hash("sha512", $this->salt1.$pw.$this->salt2);
 
         $query = $this->con->prepare("INSERT INTO users(name, username, admission, email, DOB, password, 
                                 phone, profilepic) VALUES(:nm, :un, :adm, :em, :dob, :pw, :ph, :ppc)");
         $query->bindParam(':nm', $n);
-        $query->bindParam(':un', $adm);
+        $query->bindParam(':un', $un);
         $query->bindParam(':adm', $adm);
         $query->bindParam(':em', $em);
         $query->bindParam(':dob', $dob);
@@ -119,13 +120,13 @@ class Account {
 
     public function login($em, $pw){
         $pw = hash("sha512", $this->salt1.$pw.$this->salt2);
-        $query = $this->con->prepare("SELECT * FROM users WHERE email=:em AND password=:pw");
+        $query = $this->con->prepare("SELECT username FROM users WHERE email=:em AND password=:pw");
         $query->bindParam(":em", $em);
         $query->bindParam(":pw", $pw);
         $query->execute();
 
         if ($query->rowCount() == 1){
-            return true;
+            return json_encode(array(true, $query->fetch(PDO::FETCH_ASSOC)));
         }
         return false;
     }
