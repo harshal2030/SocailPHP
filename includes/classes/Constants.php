@@ -4,6 +4,8 @@ class Constants {
     public static $invalidAdm = "Enter a valid Admission number";
     public static $invalidPhone = "Phone number is invalid";
     public static $NameCharacters = "Name must have 4 to 50 Characters";
+    public static $usernameTaken = "username is already taken";
+    public static $usernameLength = "username can have 2 to 20 characters";
     public static $emailInvalid = "E-mail address is invalid";
     public static $emailTaken = "E-mail is already registered";
     public static $passwordLength = "Password must have atleast 6 characters";

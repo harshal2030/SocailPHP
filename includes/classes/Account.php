@@ -45,6 +45,23 @@ class Account {
         }
     }
 
+    private function validateUsername($un) {
+
+        if (strlen($un) < 2 || strlen($un) > 20) {
+            array_push($this->errorArray, Constants::$usernameLength);
+            return;
+        }
+
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un");
+        $query->bindParam(':un', $un);
+        $query->execute();
+
+        if ($query->rowCount() != 0) {
+            array_push($this->errorArray, Constants::$usernameTaken);
+            return;
+        }
+    }
+
     private function validatephone($num) {
         if (!ctype_digit($num)) {
             array_push($this->errorArray, Constants::$onlyDigits);
@@ -86,9 +103,10 @@ class Account {
     public function insertUserDetails($n, $adm, $em, $phoneNum, $pw, $dob, $profilePic) {
         $pw=hash("sha512", $this->salt1.$pw.$this->salt2);
 
-        $query = $this->con->prepare("INSERT INTO users(name, admission, email, DOB, password, 
-                                phone, profilepic) VALUES(:nm, :adm, :em, :dob, :pw, :ph, :ppc)");
+        $query = $this->con->prepare("INSERT INTO users(name, username, admission, email, DOB, password, 
+                                phone, profilepic) VALUES(:nm, :un, :adm, :em, :dob, :pw, :ph, :ppc)");
         $query->bindParam(':nm', $n);
+        $query->bindParam(':un', $adm);
         $query->bindParam(':adm', $adm);
         $query->bindParam(':em', $em);
         $query->bindParam(':dob', $dob);
