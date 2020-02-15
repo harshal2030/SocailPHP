@@ -21,6 +21,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
         $obj = json_decode($json, true);
         $name = FormSanitizer::sanitizeString($obj['name']);
+        $username = FormSanitizer::sanitizeUsername($obj['username']);
         $adm = FormSanitizer::sanitizeString($obj['adm']);
         $email = FormSanitizer::sanitizeEmail($obj['email']);
         $phone = FormSanitizer::sanitizeString($obj['phone']);
@@ -30,7 +31,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     
         $account = new Account($con);
     
-        $wasSuccess = $account->register($name, $adm, $email, $phone, $pw, $dob, $profilePic);
+        $wasSuccess = $account->register($name, $username, $adm, $email, $phone, $pw, $dob, $profilePic);
         if ($wasSuccess) {
             echo json_encode(array(true));
         }

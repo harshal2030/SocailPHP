@@ -15,9 +15,9 @@ class ProfileDataHandler {
         return true;
     }
 
-    public function fetchProfileData($em) {
-        $query = $this->con->prepare("SELECT name, admission, profilepic FROM users WHERE email=:em");
-        $query->bindParam(":em", $em);
+    public function fetchProfileData($un) {
+        $query = $this->con->prepare("SELECT name, admission, profilepic FROM users WHERE username=:un");
+        $query->bindParam(":un", $un);
         $query->execute();
 
         $data = $query->fetch(PDO::FETCH_ASSOC);

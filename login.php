@@ -26,8 +26,8 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     
         $userLoggedIn = $account->login($email, $pw);
 
-        if ($userLoggedIn) {
-            echo json_encode(array(true));
+        if ($userLoggedIn[0] == true) {
+            echo $userLoggedIn;
         }
         else {
             echo json_encode(array("Incorrect Username/Passwrd"));
