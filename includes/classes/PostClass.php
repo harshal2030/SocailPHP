@@ -32,8 +32,10 @@ class PostHandler {
             if (strlen($row['mediaPath']) != 0) {
                 $row['mediaPath'] = 'http://192.168.43.25/api/'.$row['mediaPath'];
             }
+
+            $temp_array = array("type" => "NORMAL", "item" => $row);
             
-            array_push($dataArray, $row);
+            array_push($dataArray, $temp_array);
         }
         return json_encode($dataArray);
     }
