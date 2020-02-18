@@ -16,7 +16,7 @@ class ProfileDataHandler {
     }
 
     public function fetchProfileData($un) {
-        $query = $this->con->prepare("SELECT name, admission, profilepic FROM users WHERE username=:un");
+        $query = $this->con->prepare("SELECT name, username, admission, profilepic FROM users WHERE username=:un");
         $query->bindParam(":un", $un);
         $query->execute();
 
