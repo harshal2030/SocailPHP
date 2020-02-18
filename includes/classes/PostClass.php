@@ -51,6 +51,47 @@ class PostHandler {
         }
         return json_encode($data);
     }
+
+    public function fetchPostActions($id, $user) {
+        $query=$this->con->prepare("SELECT * FROM likes WHERE postId=:id");
+        $query->bindParam(':id', $id);
+        $query->execute();
+
+        $queryC = $this->con->prepare("SELECT * FROM likes WHERE postId=:id AND LikedBy=:user");
+        $queryC->bindParam(':id', $id);
+        $queryC->bindParam(':user', $user);
+        $queryC->execute();
+
+        $liked = $queryC->rowCount() == 0 ? false : true;
+
+        $query2=$this->con->prepare("SELECT * FROM comments WHERE postId=:id");
+        $query2->bindParam(':id', $id);
+        $query2->execute();
+
+        $postMap = array("likes" => 0, "comments" => 0, "likedByUser" => $liked);
+        $postMap['likes'] = $query->rowCount();
+        $postMap['comments'] = $query2->rowCount();
+
+        return json_encode($postMap);
+    }
+
+    public function addLike($id, $postedBy, $user) {
+        $query = $this->con->prepare("INSERT INTO likes(postId, postedBy, LikedBy) VALUES(:pid, :pb, :lb)");
+        $query->bindParam(':pid', $id);
+        $query->bindParam(':pb', $postedBy);
+        $query->bindParam(':lb', $user);
+
+        $query->execute();
+    }
+
+    public function removeLike($id, $postedBy, $user) {
+        $query = $this->con->prepare("DELETE FROM likes WHERE postId=:id AND postedBy=:pby AND LikedBy=:lb");
+        $query->bindParam(':id', $id);
+        $query->bindParam(':pby', $postedBy);
+        $query->bindParam(':lb', $user);
+
+        $query->execute();
+    }
 }
 
 ?>
