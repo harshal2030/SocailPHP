@@ -23,7 +23,7 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $data=json_decode($data, true);
 
             if ($action == 'FETCH_POST_ACTIONS') {
-                echo $controller->fetchPostActions($data['postId'], $data['user']);
+                echo json_encode($controller->fetchPostActions($data['postId'], $data['user']));
             } 
             elseif ($action == 'ADD_LIKE'){
                 $controller->addLike($data['postId'], $data['postedBy'], $data['user']);
