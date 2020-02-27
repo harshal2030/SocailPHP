@@ -1,6 +1,7 @@
 <?php
 require_once("includes/config.php");
 require_once("includes/classes/FormSanitizer.php");
+require_once("includes/classes/friendClass.php");
 
 if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
 
@@ -13,13 +14,22 @@ if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
     $query->bindParam(":pw", $pw);
 
     $query->execute();
+
+    $friendController = new FriendHandler($con);
+
     if ($query->rowCount() == 1) {
         $json = file_get_contents('php://input');
 
         $obj = json_decode($json, true);
+        $userName = FormSanitizer::sanitizeUsername($obj['username']);
         $user = FormSanitizer::sanitizeString($obj['user']);
-        $following = FormSanitizer::sanitizeString($obj['view']);
-        
+        $following = FormSanitizer::sanitizeString($obj['following']);
+        $followingUserName = FormSanitizer::sanitizeUsername($obj['followingUsername']);
+
+        $wasSuccess = $friendController->addFriend($userName, $user, $followingUserName, $following);
+        if ($wasSuccess) {
+            echo json_encode(true);
+        } else echo http_response_code(500);
     }
 }
 else {
